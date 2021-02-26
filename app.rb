@@ -26,7 +26,7 @@ post('/users/new') do
         password_digest = BCrypt::Password.create(password)
         db = SQLite3::Database.new("db/schema.db")
         db.execute("INSERT INTO students (username,pwdigest) VALUES (?,?)",username,password_digest)
-        redirect("/login")
+        redirect("/showlogin")
       
       else
         #Fel
@@ -41,7 +41,7 @@ post("/login") do
     username = params[:username]
     password = params[:password]
   
-    db = SQLite3::Database.new("db/todo.db")  
+    db = SQLite3::Database.new("db/schema.db")  
     db.results_as_hash = true
     result = db.execute("SELECT * FROM students WHERE username = ?", username).first
     p result
@@ -56,4 +56,15 @@ post("/login") do
       "Lösenord eller användarnamn stämmer ej"
   
     end
+end
+
+get("/schedule") do
+    id = session[:id].to_i
+    db = SQLite3::Database.new("db/schema.db")  
+    db.results_as_hash = true
+    result = db.execute("SELECT * FROM schedule WHERE user_id = ?",id)
+    p "Visar ditt schema #{result}"
+    slim(:"schedule/index", locals:{scheman:result})
+
+
 end

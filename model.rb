@@ -28,3 +28,9 @@ end
 def log_in(username, password)
 
 end
+
+def get_classes
+    connect_to_db
+    db.results_as_hash = true
+    db.execute("SELECT * FROM class")#FIXA. Ska ta ut alla class_name från Class.
+end

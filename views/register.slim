@@ -3,4 +3,12 @@ form action="/users/new" method="POST"
     input type="text" name="username" placeholder="Enter username"
     input type="password" name="password" placeholder="Enter password"
     input type="password" name="password_confirm" placeholder="Confirm password"
+
+    label for="class" Choose a class:
+
+    select id="class" name="class_choice"
+        - each
+    
+
     input type="submit" value="Registrera dig"
+
