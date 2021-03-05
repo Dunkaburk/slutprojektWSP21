@@ -58,6 +58,7 @@ post("/login") do
     end
 end
 
+
 get("/schedule") do
     id = session[:id].to_i
     db = SQLite3::Database.new("db/schema.db")  
