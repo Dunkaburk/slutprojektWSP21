@@ -5,9 +5,19 @@ require 'bcrypt'
 
 enable :sessions
 
+helpers do 
+    
+    def get_classes()
+        db = connect_to_db
+        db.results_as_hash = true
+        classes = db.execute("SELECT class_name FROM class")
+        return classes #FIXA. Ska ta ut alla class_name från Class.
+    end
 
-def connect_to_db
-    db = SQLite3::Database.new("db/schema.db")
+end
+
+def connect_to_db()
+    SQLite3::Database.new("db/schema.db")
 end
 
 def register_user(username, password, password_confirm)
@@ -29,8 +39,10 @@ def log_in(username, password)
 
 end
 
-def get_classes
-    connect_to_db
-    db.results_as_hash = true
-    db.execute("SELECT * FROM class")#FIXA. Ska ta ut alla class_name från Class.
-end
+
+
+=begin
+db.execute("SELECT class_name FROM class").each do |klass|
+   puts option value="#{klass}" klass
+end 
+=end

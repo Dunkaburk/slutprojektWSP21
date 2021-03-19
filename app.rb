@@ -8,7 +8,10 @@ enable :sessions
 
 
 get ("/") do
-    slim(:register)
+    db = SQLite3::Database.new("db/schema.db")
+    db.results_as_hash = true
+    classes = db.execute("SELECT class_name FROM class")
+    slim(:register, locals:{klasser:classes})
 end
 
 get('/showlogin') do
