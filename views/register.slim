@@ -1,15 +1,15 @@
-
-p Which class are you in?
-
-
-
-/ - klasser.each do |klass|
-/     puts option value="#{klass}" "#{klass}"
-
 p Please register or log in!
 
 form action="/users/new" method="POST"
     input type="text" name="username" placeholder="Enter username"
+    <br></br>
+    label for="classroom">Which class are you part of?
+    <br></br>
+    select id="classroom"
+        - klasser.each do |klass|
+            option value="#{klass}" "#{klass}"
+    <br></br>
     input type="password" name="password" placeholder="Enter password"
     input type="password" name="password_confirm" placeholder="Confirm password"
+    <br></br>
     input type="submit" value="Registrera dig"
