@@ -6,6 +6,7 @@ require_relative './model.rb'
 
 enable :sessions
 
+#--------REGISTER-INITIALIZE------------
 
 get ("/") do
     p "Register load"
@@ -16,44 +17,45 @@ get ("/") do
     slim(:register, locals:{klasser:classes})
 end
 
+#--------REDIRECT-TO-LOGIN---------------
+
 get('/showlogin') do
     slim(:login)
 end
 
-post('/users/new') do
-    username = params[:username]
-    password = params[:password]
-    class_id = params[:classroom]
-    pw_confirm = params[:password_confirm]
-    p class_id
+#------------REGISTER---------------
 
-    #register_user(username, password, pw_confirm)
+post('/users/new') do
+    username = retrive_username
+    password = retrive_password
+    class_name = retrive_class_name
+    pw_confirm = retrive_password_confirm
+
+    db = connect_to_db
+    class_id = get_class_id(class_name)
+
 
     if (pw_confirm == password)
-        password_digest = BCrypt::Password.create(password)
-        db = SQLite3::Database.new("db/schema.db")
-        db.execute("INSERT INTO students (username,pwdigest,class_id) VALUES (?,?, ?)",username,password_digest,class_id)
+        create_new_user(username, password, class_id)
         redirect("/showlogin")
       
       else
-        #Fel
         "Lösenorden matchar ej"
     
     end
     
 end
 
+#-----------------LOGIN--------------------
 
 post("/login") do
-    username = params[:username]
-    password = params[:password]
+    username = retrive_username
+    password = retrive_password
   
-    db = SQLite3::Database.new("db/schema.db")  
+    db = connect_to_db  
     db.results_as_hash = true
-    result = db.execute("SELECT * FROM students WHERE username = ?", username).first
-    p result
-    pwdigest = result["pwdigest"]
-    id = result["id"]
+    pwdigest = get_pw_digest(username)
+    id = get_student_id(username)
     
     if BCrypt::Password.new(pwdigest) == password
       session[:id] = id
@@ -61,19 +63,16 @@ post("/login") do
   
     else
       "Lösenord eller användarnamn stämmer ej"
-  
     end
 end
 
-
+#-----------CONTENT----------
 
 get("/schedule") do
     id = session[:id].to_i
-    db = SQLite3::Database.new("db/schema.db")  
+    db = connect_to_db  
     db.results_as_hash = true
-    result = db.execute("SELECT * FROM schedule WHERE student_id = ?",id)
+    result = retrive_schedule(id)
     p "Visar ditt schema #{result}"
     slim(:"schedule/index", locals:{scheman:result})
-
-
 end
