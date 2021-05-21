@@ -1,0 +1,105 @@
+p a_klassen
+
+form action="/schedule/3/edit" method="post"
+    
+    <br>
+
+    p = "3A schema"
+
+    label for="old_value">Which lesson would you like to replace?
+    <br>
+    select name="old_value"
+        
+        option value=a_klassen[0]["id"] #{a_klassen[0]['content']}
+        option value=a_klassen[1]["id"] #{a_klassen[1]['content']}
+        option value=a_klassen[2]["id"] #{a_klassen[2]['content']}
+        option value=a_klassen[3]["id"] #{a_klassen[3]['content']}
+
+    
+    <br>
+
+    label for="new_value">What lesson would you like to replace it with?
+    <br>
+    select name="new_value"    
+        - lektioner.each do |lektion|
+            option value=lektion["id"] #{lektion["content"]}
+    
+    <br>
+    br
+    
+
+
+    input type="submit" value="Submit"
+
+   
+
+
+
+
+
+
+form action="/schedule/2/edit" method="post"
+
+    <br>
+
+    p = "3B schema"
+
+    label for="old_value">Which lesson would you like to replace?
+    <br>
+    select name="old_value"
+        
+        option value=b_klassen[0]["id"] #{b_klassen[0]['content']}
+        option value=b_klassen[1]["id"] #{b_klassen[1]['content']}
+        option value=b_klassen[2]["id"] #{b_klassen[2]['content']}
+        option value=b_klassen[3]["id"] #{b_klassen[3]['content']}
+
+
+    <br>
+
+    label for="new_value">What lesson would you like to replace it with?
+    <br>
+    select name="new_value"    
+        - lektioner.each do |lektion|
+            option value=lektion["id"] #{lektion["content"]}
+
+    <br>
+    br
+
+
+    input type="submit" value="Submit"
+
+
+
+
+
+
+
+form action="/schedule/1/edit" method="post"
+
+    <br>
+
+    p = "3C schema"
+
+    label for="old_value">Which lesson would you like to replace?
+    <br>
+    select name="old_value"
+        
+        option value=c_klassen[0]["id"] #{c_klassen[0]['content']}
+        option value=c_klassen[1]["id"] #{c_klassen[1]['content']}
+        option value=c_klassen[2]["id"] #{c_klassen[2]['content']}
+        option value=c_klassen[3]["id"] #{c_klassen[3]['content']}
+
+
+    <br>
+
+    label for="new_value">What lesson would you like to replace it with?
+    <br>
+    select name="new_value"    
+        - lektioner.each do |lektion|
+            option value=lektion["id"] #{lektion["content"]}
+
+    <br>
+    br
+
+
+    input type="submit" value="Submit"
