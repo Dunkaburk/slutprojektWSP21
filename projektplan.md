@@ -19,7 +19,7 @@ En edit sida endast tillgänglig för administratörer.
 ![edit](/img/edit.PNG)
 
 ## 3. Databas med ER-diagram (Bild på ER-diagram).
-    (/img/ER-diagram.PNG)
+![ER-diagram](/img/ER-diagram.PNG)
 
 
 
