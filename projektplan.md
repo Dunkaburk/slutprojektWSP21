@@ -5,18 +5,18 @@ Jag ska göra en schemaapplikation som visar ditt schema beroende på vilken kla
 ## 2. Vyer (visa bildskisser på dina sidor).
 
 Skiss på sidan (I figma)
-    (/img/vyer.PNG)
+![vy](/img/vyer.PNG)
 
 
 Registreringssidan
-    (/img/register.PNG)
+![register](/img/register.PNG)
 Log in sida
-    (/img/log-in.PNG)
+![images](/img/log-in.PNG)
 Huvudsidan, En vanlig användare kan bara se sitt eget schema och alla användare men admin (Som är inloggad i nuläget, kan se administratörsinställningarna)
-    (/img/schema.PNG)
+![schema](/img/schema.PNG)
     
 En edit sida endast tillgänglig för administratörer. 
-    (/img/edit.PNG)
+![edit](/img/edit.PNG)
 
 ## 3. Databas med ER-diagram (Bild på ER-diagram).
     (/img/ER-diagram.PNG)
