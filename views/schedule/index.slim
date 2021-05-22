@@ -1,25 +1,29 @@
-h1 = "Welcome #{current_user[0]} to your schedule!"
-h2 Here is your schedule!
-
-p = "08.30 - 10.00: #{scheman[0]['content']}"
-p = "10.15 - 11.45: #{scheman[1]['content']}"
-p = "12.45 - 14.15: #{scheman[2]['content']}"
-p = "14.30 - 16.00: #{scheman[3]['content']}"
 
 
-h3 Here is a list of all current students 
+- if session[:logged_in] == true
 
-- klass_lista.each do |student|
-    p = student["username"]
+    h1 = "Welcome #{current_user[0]} to your schedule!"
+    h2 Here is your schedule!
+
+    p = "08.30 - 10.00: #{scheman[0]['content']}"
+    p = "10.15 - 11.45: #{scheman[1]['content']}"
+    p = "12.45 - 14.15: #{scheman[2]['content']}"
+    p = "14.30 - 16.00: #{scheman[3]['content']}"
 
 
-- if session[:admin] == true
-    h3 Administrator options:
-    a href ="/edit" Edit schedule
+    h3 Here is a list of all current students 
 
-    form action="/delete_student" method="POST"
-        <br>
-        p Enter which user you wish to delete
-        input type="text" name="username" placeholder="Username"
-        <br>
-        input type="submit" value="Delete"
+    - klass_lista.each do |student|
+        p = student["username"]
+
+
+    - if session[:admin] == true
+        h3 Administrator options:
+        a href ="/edit" Edit schedule
+
+        form action="/delete_student" method="POST"
+            <br>
+            p Enter which user you wish to delete
+            input type="text" name="username" placeholder="Username"
+            <br>
+            input type="submit" value="Delete"

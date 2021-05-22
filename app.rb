@@ -10,6 +10,13 @@ enable :sessions
 include Model # Wat dis?
 include Helpers
 
+before do
+  unless session[:logged_in] 
+    return if request.path_info == "/users/new" || request.path_info == "/" || request.path_info == "/showlogin" || request.path_info == "/login" 
+    redirect("/")
+  end
+end
+
 #--------REGISTER-INITIALIZE------------
 
 # Display landing page
@@ -22,13 +29,13 @@ get ("/") do
     db = connect_to_db
     db.results_as_hash = true
     classes = get_classes
-    slim(:register, locals:{klasser:classes})
+    slim(:"users/register", locals:{klasser:classes})
 end
 
 #--------REDIRECT-TO-LOGIN---------------
 # Displays login form
 get('/showlogin') do
-    slim(:login)
+    slim(:"users/login")
 end
 
 #------------REGISTER---------------
@@ -55,11 +62,7 @@ post('/users/new') do
     db = connect_to_db
     class_id = get_class_id(class_name)
     db.results_as_hash = true
-    student_exists = get_student_list.include?(username)
-    if student_exists == true
-      sleep(3)
-      redirect("users/new")
-    end
+    return "Username unavailible" if user_exists(username)
     if (pw_confirm == password) 
       if (username != "") && (password != "")
         create_new_user(username, password, class_id)
@@ -86,37 +89,40 @@ end
 # @see Model#connect_to_db
 # @see Model#get_pw_digest
 # @see Model#get_student_id
+# @see Model#user_exists
+# @see Model#encrypt_password
 post("/login") do
     username = retrive_username
     password = retrive_password
-    if (username == "") || (password == "")
+    if (username == "") || (password == "")  #Checks if either password or username is nil
       "Please enter a valid username and password"
       redirect("/showlogin")
     end
     db = connect_to_db  
     db.results_as_hash = true
+    return "User does not exist" unless user_exists(username) #Checks if user exists
     pwdigest = get_pw_digest(username)
     id = get_student_id(username)
 
-    
-  
-    
-    
     if encrypt_password(pwdigest) == password
       session[:id] = id
       
 
       if id == 13
-        
-        session[:admin] = true
-      else
-        session[:admin] = false
+          session[:admin] = true
+        else
+          session[:admin] = false
       end
 
-        redirect("/schedule")
+
+      session[:logged_in] = true
+      p session[:logged_in]
+      redirect("/schedule")
+
+  
       
     else
-      "Lösenord eller användarnamn stämmer ej"
+      "Password or username incorrect"
     end
 end
 
@@ -141,29 +147,45 @@ end
 
 
 #-----------CRUD------------
+# Updates the chosen schedule based on choices in the form
+#
+# @see Model#get_old_content
+# @see Model#get_new_content
+# @see Model#connect_to_db
+# @see Model#get_id_from_content
+# @see Model#update_schedule
 post("/schedule/:schedule_id/edit") do |schedule_id|
-  old_value = params[:old_value]
-  new_value = params[:new_value]
-
-  p old_value
-
-  p new_value
+  old_value = get_old_content
+  new_value = get_new_content
 
   db = connect_to_db
-  old_value_id = db.execute("SELECT id FROM lesson WHERE content = ?",old_value)
-  db.execute("UPDATE schedule_lesson_rel SET lesson_id = ? WHERE schedule_id = ? AND lesson_id = ?", new_value, schedule_id.to_i, old_value_id)
+  old_value_id = get_id_from_content(old_value)
+  update_schedule(new_value, schedule_id, old_value_id)
   redirect("/schedule")
 end
 
-
+# Displays schedule editing form 
+#
+# @see Model#connect_to_db
+# @see Model#get_3a_schedule
+# @see Model#get_3b_schedule
+# @see Model#get_3c_schedule
+# @see Model#get_all_lessons
 get("/edit") do
   db = connect_to_db
   db.results_as_hash = true
-  slim(:"edit", locals:{a_klassen:get_3a_schedule, b_klassen:get_3b_schedule, c_klassen:get_3c_schedule, lektioner:get_all_lessons})
+  slim(:"administrator/edit", locals:{a_klassen:get_3a_schedule, b_klassen:get_3b_schedule, c_klassen:get_3c_schedule, lektioner:get_all_lessons})
 end
+
+# Deletes chosen user
+#
+# @see Model#connect_to_db
+# @see Model#retrive_username
+# @see Model#delete_user
 
 post("/delete_student") do
   db = connect_to_db
-  db.execute("DELETE FROM students WHERE username = ?", retrive_username)
+  username = retrive_username
+  delete_user(username)
   redirect("/schedule")
 end

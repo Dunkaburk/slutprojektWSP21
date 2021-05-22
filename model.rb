@@ -64,11 +64,10 @@ module Model
         return result["id"]
     end
 
-    def user_exists(name, username_list)
-        i += 1
-        if name == username_list[i]
-            
-        end
+    def user_exists(name)
+        db = connect_to_db
+        db.results_as_hash = true
+        db.execute("SELECT * FROM students WHERE username = ?", name).empty? ? false : true
     end 
 
     #-------------------INDEX----------------------
@@ -117,24 +116,30 @@ module Model
         return db.execute("SELECT * FROM lesson")
     end
 
+    def update_schedule(new_value, schedule_id, old_value_id)
+        db = connect_to_db
+        db.execute("UPDATE schedule_lesson_rel SET lesson_id = ? WHERE schedule_id = ? AND lesson_id = ?", new_value, schedule_id.to_i, old_value_id)
+    end
+
+    def get_id_from_content(old_value)
+        db = connect_to_db
+        db.execute("SELECT id FROM lesson WHERE content = ?",old_value)
+    end
+
+    def get_old_content
+        params[:old_value]
+    end
+
+    def get_new_content
+        params[:new_value]
+    end
+
+    def delete_user(username)
+        db = connect_to_db
+        db.execute("DELETE FROM students WHERE username = ?",username)
+    end
+
 end
 
 
 
-
-
-
-
-def ettan
-    username = retrive_username
-    {"username" => "#{username}"}
-end
-
-
-def tvan
-
-end
-
-def trean
-
-end
